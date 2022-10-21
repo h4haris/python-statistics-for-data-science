@@ -1,0 +1,29 @@
+# Finding outliers using IQR
+# 
+# Outliers can have big effects on statistics like mean, as well as statistics that rely on the mean, such 
+# as variance and standard deviation. 
+# 
+# Interquartile range, or IQR, is another way of measuring spread that's less influenced by outliers. 
+# IQR is also often used to find outliers.
+
+
+# Calculate total co2_emission per country: emissions_by_country
+emissions_by_country = food_consumption.groupby("country")[ "co2_emission" ].sum()
+
+print(emissions_by_country)
+
+
+# Compute the first and third quartiles and IQR of emissions_by_country
+q1 = np.quantile(emissions_by_country, 0.25)
+q3 = np.quantile(emissions_by_country, 0.75)
+iqr = q3 - q1
+
+
+# Calculate the lower and upper cutoffs for outliers
+lower = q1 - 1.5 * iqr
+upper = q3 + 1.5 * iqr
+
+
+# Subset emissions_by_country to find outliers
+outliers = emissions_by_country[(emissions_by_country < lower) | (emissions_by_country > upper)]
+print(outliers)
